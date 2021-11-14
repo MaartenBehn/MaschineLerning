@@ -1,11 +1,16 @@
 package main
 
+import (
+	"math/rand"
+	"time"
+)
+
 const nodesPerLayer = 2
 const hiddenLayersPerNet = 1
 const inputNodes = 2
 const outputNodes = 2
 const bias = 1
-const lerparam = 1
+const lerparam = 2
 
 type NeuralNet struct {
 	input       *matrix
@@ -46,6 +51,15 @@ func NewNet() *NeuralNet {
 	net.outputLayer.expected = NewMatrix(nodesPerLayer, 1)
 
 	return net
+}
+
+func (layer Layer) setRandomWeigts() {
+	rand.Seed(time.Now().Unix())
+	for i := 0; i < layer.weights.row; i++ {
+		for j := 0; j < layer.weights.collum; j++ {
+			layer.weights.Set(i, j, rand.Float64())
+		}
+	}
 }
 
 func (net *NeuralNet) forwardPath() {
