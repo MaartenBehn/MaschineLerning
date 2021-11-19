@@ -9,11 +9,10 @@ import (
 const bias = 1
 
 type NeuralNet struct {
-	nodesPerHiddenLayer int
-	hiddenLayersPerNet  int
+	hiddenLayersAmmount int
 	inputNodes          int
 	outputNodes         int
-	lernparam           float64
+	learnparam          float64
 
 	input       *matrix
 	layers      []Layer
@@ -32,11 +31,10 @@ type Layer struct {
 
 func NewNet(nodesPerHiddenLayer int, hiddenLayersPerNet int, inputNodes int, outputNodes int, lernparam float64) *NeuralNet {
 	net := &NeuralNet{
-		nodesPerHiddenLayer: nodesPerHiddenLayer,
-		hiddenLayersPerNet:  hiddenLayersPerNet,
+		hiddenLayersAmmount: hiddenLayersPerNet,
 		inputNodes:          inputNodes,
 		outputNodes:         outputNodes,
-		lernparam:           lernparam,
+		learnparam:          lernparam,
 	}
 
 	net.input = NewMatrix(inputNodes+1, 1)
@@ -86,7 +84,7 @@ func (layer Layer) setRandomWeigts() {
 }
 
 func (net *NeuralNet) forwardPath() {
-	for i := 0; i < net.hiddenLayersPerNet+1; i++ {
+	for i := 0; i < net.hiddenLayersAmmount+1; i++ {
 		layer := net.layers[i]
 		result := layer.weights.Mul(layer.input)
 
@@ -108,7 +106,7 @@ func (net *NeuralNet) backwardPath() {
 		layer.errSig.Set(i, 0, sig)
 	}
 
-	for k := net.hiddenLayersPerNet - 1; k >= 0; k-- {
+	for k := net.hiddenLayersAmmount - 1; k >= 0; k-- {
 		layer := net.layers[k]
 		for i := 0; i < layer.errSig.row; i++ {
 			sig := sigmoidDerivationFunc(layer.netInput.Get(i, 0))
@@ -127,7 +125,7 @@ func (net *NeuralNet) backwardPath() {
 	for _, layer := range net.layers {
 		for i := 0; i < layer.errSig.row; i++ {
 			for j := 0; j < layer.input.row; j++ {
-				weigthDelta := net.lernparam * layer.errSig.Get(i, 0) * layer.input.Get(j, 0)
+				weigthDelta := net.learnparam * layer.errSig.Get(i, 0) * layer.input.Get(j, 0)
 				weigth := layer.weights.Get(i, j) + weigthDelta
 				layer.weights.Set(i, j, weigth)
 			}
