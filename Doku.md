@@ -1,6 +1,6 @@
 # Doku
 
-## matrix.go
+## [matrix.go](matrix.go)
 
 ```go
 type matrix struct {
@@ -17,7 +17,7 @@ Oft werden im neuralen Netz Vektoren genutzt. Diese werden auch als Matrizen dar
 
 Die restlichen Funktionen von der Matrix Datei sind selbst erklärend.
 
-## math.go
+## [math.go](math.go)
 
 ```go
 func sigmoidFunc(x float64) float64 {
@@ -33,7 +33,7 @@ func sigmoidDerivationFunc(x float64) float64 {
 ```
 Die Ableitung der Signumd-Funktion.
 
-## net.go
+## [net.go](net.go)
 ### Net Datenstruktur
 
 ```go
@@ -169,7 +169,7 @@ Nun wird noch das `weigthDelta` ausgrechenet, indem der Lernparameter, `errSig` 
 Die wird auf `weigth` addiert.
 
 
-## learn.go
+## [learn.go](learn.go)
 
 ### Learn Settings Datenstruktur
 ```go
@@ -219,7 +219,7 @@ func (net *NeuralNet) loadDataSet(dataset *DataSet) {
 `loadDataSet` setzt die Inputs des Nets auf die Werte das Datenset. 
 Außerdem wird `expected` überall auf 0 gesetzt. Außer bei der Note mit demselben Index wie `id` dort auf 1. 
  
-## file.go
+## [file.go](file.go)
 
 `func loadFile(path string) (file *os.File)` gibt die Datei an dem Pfad zurück.
 
