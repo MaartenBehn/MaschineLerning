@@ -6,14 +6,14 @@ import (
 )
 
 func TestNet(t *testing.T) {
-	NewNet(2, 1, 2, 2, 1, 1)
+	NewNet(2, 1, 2, 2, 1)
 }
 
-const randomWeigths = true
-const printDebug = false
+const randomWeigths = false
+const printDebug = true
 
 func TestLearnNet(t *testing.T) {
-	net := NewNet(2, 1, 2, 2, 1, 1)
+	net := NewNet(2, 1, 2, 2, 1)
 
 	net.input.Set(1, 0, 0.7)
 	net.input.Set(2, 0, 0.6)
@@ -46,7 +46,7 @@ func TestLearnNet(t *testing.T) {
 		fmt.Println("Input Layer:")
 		net.input.Print()
 		fmt.Print("\n")
-		printLayers(net)
+		net.print()
 	}
 
 	for i := 0; i < 200; i++ {
@@ -56,50 +56,21 @@ func TestLearnNet(t *testing.T) {
 
 		if printDebug {
 			fmt.Println("\n--- Forward Path ---")
-			printLayers(net)
+			net.print()
 		}
 
 		net.backwardPath()
 
 		if printDebug {
 			fmt.Println("--- Backard Path ---")
-			printLayers(net)
+			net.print()
 		}
 	}
 	fmt.Println("")
 
-	printLayers(net)
+	net.printOutput()
 	if net.outputLayer.output.Get(0, 0)-
 		net.outputLayer.expected.Get(0, 0) > 0.1 {
 		t.Fail()
-	}
-}
-
-func printLayers(net *NeuralNet) {
-	fmt.Println("--- Layers ---")
-	for i, layer := range net.layers {
-		fmt.Printf("Layer %d:\n", i)
-
-		fmt.Printf("Input:\n")
-		layer.input.Print()
-
-		fmt.Printf("Weigths:\n")
-		layer.weights.Print()
-
-		fmt.Printf("NetInput:\n")
-		layer.netInput.Print()
-
-		fmt.Printf("Output:\n")
-		layer.output.Print()
-
-		fmt.Printf("ErrSig:\n")
-		layer.errSig.Print()
-
-		fmt.Printf("Expected:\n")
-		if layer.expected == nil {
-			fmt.Printf("nill\n")
-		} else {
-			layer.expected.Print()
-		}
 	}
 }

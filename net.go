@@ -1,17 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
 
+const bias = 1
+
 type NeuralNet struct {
-	nodesPerLayer      int
-	hiddenLayersPerNet int
-	inputNodes         int
-	outputNodes        int
-	bias               float64
-	lernparam          float64
+	nodesPerHiddenLayer int
+	hiddenLayersPerNet  int
+	inputNodes          int
+	outputNodes         int
+	lernparam           float64
 
 	input       *matrix
 	layers      []Layer
@@ -19,45 +21,59 @@ type NeuralNet struct {
 }
 
 type Layer struct {
-	input    *matrix
-	weights  *matrix
-	netInput *matrix
-	output   *matrix
-	errSig   *matrix
-	expected *matrix
+	nodesAmount int
+	input       *matrix
+	weights     *matrix
+	netInput    *matrix
+	output      *matrix
+	errSig      *matrix
+	expected    *matrix
 }
 
-func NewNet(nodesPerLayer int, hiddenLayersPerNet int, inputNodes int, outputNodes int, bias float64, lernparam float64) *NeuralNet {
+func NewNet(nodesPerHiddenLayer int, hiddenLayersPerNet int, inputNodes int, outputNodes int, lernparam float64) *NeuralNet {
 	net := &NeuralNet{
-		nodesPerLayer:      nodesPerLayer,
-		hiddenLayersPerNet: hiddenLayersPerNet,
-		inputNodes:         inputNodes,
-		outputNodes:        outputNodes,
-		bias:               bias,
-		lernparam:          lernparam,
+		nodesPerHiddenLayer: nodesPerHiddenLayer,
+		hiddenLayersPerNet:  hiddenLayersPerNet,
+		inputNodes:          inputNodes,
+		outputNodes:         outputNodes,
+		lernparam:           lernparam,
 	}
 
 	net.input = NewMatrix(inputNodes+1, 1)
 	net.input.Set(0, 0, bias)
 
-	for i := 0; i < len(net.layers); i++ {
+	net.layers = make([]Layer, hiddenLayersPerNet+1)
+	for i := 0; i < hiddenLayersPerNet+1; i++ {
 
 		if i == 0 {
 			net.layers[i].input = net.input
 		} else {
 			net.layers[i].input = net.layers[i-1].output
 		}
-		net.layers[i].weights = NewMatrix(nodesPerLayer, net.layers[i].input.row)
-		net.layers[i].output = NewMatrix(nodesPerLayer+1, 1)
+
+		if i < hiddenLayersPerNet {
+			net.layers[i].nodesAmount = nodesPerHiddenLayer
+		} else {
+			net.layers[i].nodesAmount = outputNodes
+		}
+
+		net.layers[i].weights = NewMatrix(net.layers[i].nodesAmount, net.layers[i].input.row)
+		net.layers[i].output = NewMatrix(net.layers[i].nodesAmount+1, 1)
 		net.layers[i].output.Set(0, 0, bias)
-		net.layers[i].netInput = NewMatrix(nodesPerLayer, 1)
-		net.layers[i].errSig = NewMatrix(nodesPerLayer, 1)
+		net.layers[i].netInput = NewMatrix(net.layers[i].nodesAmount, 1)
+		net.layers[i].errSig = NewMatrix(net.layers[i].nodesAmount, 1)
 	}
 
 	net.outputLayer = &net.layers[hiddenLayersPerNet]
-	net.outputLayer.expected = NewMatrix(nodesPerLayer, 1)
+	net.outputLayer.expected = NewMatrix(outputNodes, 1)
 
 	return net
+}
+
+func (net *NeuralNet) setRandomWeigts() {
+	for i := 0; i < len(net.layers); i++ {
+		net.layers[i].setRandomWeigts()
+	}
 }
 
 func (layer Layer) setRandomWeigts() {
@@ -110,11 +126,44 @@ func (net *NeuralNet) backwardPath() {
 
 	for _, layer := range net.layers {
 		for i := 0; i < layer.errSig.row; i++ {
-			for j := 0; j < net.nodesPerLayer+1; j++ {
-				weigthDelta := net.lernparam * layer.errSig.Get(i, 0) * net.input.Get(j, 0)
+			for j := 0; j < layer.input.row; j++ {
+				weigthDelta := net.lernparam * layer.errSig.Get(i, 0) * layer.input.Get(j, 0)
 				weigth := layer.weights.Get(i, j) + weigthDelta
 				layer.weights.Set(i, j, weigth)
 			}
 		}
 	}
+}
+
+func (net *NeuralNet) print() {
+	fmt.Println("--- Layers ---")
+	for i, layer := range net.layers {
+		fmt.Printf("Layer %d:\n", i)
+
+		fmt.Printf("Input:\n")
+		layer.input.Print()
+
+		fmt.Printf("Weigths:\n")
+		layer.weights.Print()
+
+		fmt.Printf("NetInput:\n")
+		layer.netInput.Print()
+
+		fmt.Printf("Output:\n")
+		layer.output.Print()
+
+		fmt.Printf("ErrSig:\n")
+		layer.errSig.Print()
+
+		fmt.Printf("Expected:\n")
+		if layer.expected == nil {
+			fmt.Printf("nill\n")
+		} else {
+			layer.expected.Print()
+		}
+	}
+}
+
+func (net *NeuralNet) printOutput() {
+	net.outputLayer.output.Print()
 }

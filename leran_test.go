@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestMultibleTestSets(t *testing.T) {
 
@@ -9,28 +12,41 @@ func TestMultibleTestSets(t *testing.T) {
 	learnSettings.datasets[0].inputs[1] = 0
 	learnSettings.datasets[0].inputs[2] = 0
 	learnSettings.datasets[0].inputs[3] = 0
-	learnSettings.datasets[0].expectedId = 0
-	learnSettings.datasets[0].name = "0"
+	learnSettings.datasets[0].name = "Zero"
 
-	learnSettings.datasets[1].inputs[0] = 0
+	learnSettings.datasets[1].inputs[0] = 1
 	learnSettings.datasets[1].inputs[1] = 1
 	learnSettings.datasets[1].inputs[2] = 0
-	learnSettings.datasets[1].inputs[3] = 0
-	learnSettings.datasets[1].expectedId = 1
-	learnSettings.datasets[1].name = "1"
+	learnSettings.datasets[1].inputs[3] = 1
+	learnSettings.datasets[1].name = "One"
 
-	learnSettings.datasets[2].inputs[0] = 0
-	learnSettings.datasets[2].inputs[1] = 0
+	learnSettings.datasets[2].inputs[0] = 1
+	learnSettings.datasets[2].inputs[1] = 1
 	learnSettings.datasets[2].inputs[2] = 1
 	learnSettings.datasets[2].inputs[3] = 0
-	learnSettings.datasets[2].expectedId = 2
-	learnSettings.datasets[2].name = "2"
+	learnSettings.datasets[2].name = "Two"
 
-	learnSettings.datasets[3].inputs[0] = 0
-	learnSettings.datasets[3].inputs[1] = 0
-	learnSettings.datasets[3].inputs[2] = 0
+	learnSettings.datasets[3].inputs[0] = 1
+	learnSettings.datasets[3].inputs[1] = 1
+	learnSettings.datasets[3].inputs[2] = 1
 	learnSettings.datasets[3].inputs[3] = 1
-	learnSettings.datasets[3].expectedId = 3
-	learnSettings.datasets[3].name = "3"
+	learnSettings.datasets[3].name = "Zero"
 
+	net := CreateNetFromLearnSettings(learnSettings, 1)
+	net.setRandomWeigts()
+
+	for i := 0; i < 10000; i++ {
+		for _, dataset := range learnSettings.datasets {
+			net.loadDataSet(dataset)
+			net.forwardPath()
+			net.backwardPath()
+		}
+	}
+
+	for _, dataset := range learnSettings.datasets {
+		net.loadDataSet(dataset)
+		net.forwardPath()
+		fmt.Println("Dataset: " + dataset.name)
+		net.printOutput()
+	}
 }
