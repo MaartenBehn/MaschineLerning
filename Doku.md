@@ -78,8 +78,8 @@ Im ersten Hiddenlayer ist `input` == `NeuralNet.input`.
 `netInput` und `errSig` sind zwischen Variablen, die für die backward Propergation benötigt werden.  
 `expected` wird nur im Outputlayer genutzt. Dort enthält es die Lösungswerte für den Datensatz.
 
-Alle floats in allen Matrizen sind immer zwischen 0 und 1.
-In eingen fällen ist bei den Vektorzugriffen index + 1 noetig. 
+Alle floats in allen Matrizen sind immer zwischen 0 und 1.  
+In einigen Fällen ist bei den Vektorzugriffen index + 1 noetig. 
 Dies hängt damit zusammen, das `input`/`output` das bias an index 0 haben und dann erst die Werte ab 1 kommen.
 
 ### Net Funktionen
