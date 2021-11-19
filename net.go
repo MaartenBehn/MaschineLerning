@@ -5,16 +5,16 @@ import (
 	"time"
 )
 
-const nodesPerLayer = 2
-const hiddenLayersPerNet = 1
-const inputNodes = 2
-const outputNodes = 2
-const bias = 1
-const lerparam = 2
-
 type NeuralNet struct {
+	nodesPerLayer      int
+	hiddenLayersPerNet int
+	inputNodes         int
+	outputNodes        int
+	bias               float64
+	lernparam          float64
+
 	input       *matrix
-	layers      [hiddenLayersPerNet + 1]Layer
+	layers      []Layer
 	outputLayer *Layer
 }
 
@@ -27,8 +27,15 @@ type Layer struct {
 	expected *matrix
 }
 
-func NewNet() *NeuralNet {
-	net := &NeuralNet{}
+func NewNet(nodesPerLayer int, hiddenLayersPerNet int, inputNodes int, outputNodes int, bias float64, lernparam float64) *NeuralNet {
+	net := &NeuralNet{
+		nodesPerLayer:      nodesPerLayer,
+		hiddenLayersPerNet: hiddenLayersPerNet,
+		inputNodes:         inputNodes,
+		outputNodes:        outputNodes,
+		bias:               bias,
+		lernparam:          lernparam,
+	}
 
 	net.input = NewMatrix(inputNodes+1, 1)
 	net.input.Set(0, 0, bias)
@@ -63,7 +70,7 @@ func (layer Layer) setRandomWeigts() {
 }
 
 func (net *NeuralNet) forwardPath() {
-	for i := 0; i < hiddenLayersPerNet+1; i++ {
+	for i := 0; i < net.hiddenLayersPerNet+1; i++ {
 		layer := net.layers[i]
 		result := layer.weights.Mul(layer.input)
 
@@ -85,7 +92,7 @@ func (net *NeuralNet) backwardPath() {
 		layer.errSig.Set(i, 0, sig)
 	}
 
-	for k := hiddenLayersPerNet - 1; k >= 0; k-- {
+	for k := net.hiddenLayersPerNet - 1; k >= 0; k-- {
 		layer := net.layers[k]
 		for i := 0; i < layer.errSig.row; i++ {
 			sig := sigmoidDerivationFunc(layer.netInput.Get(i, 0))
@@ -101,22 +108,12 @@ func (net *NeuralNet) backwardPath() {
 		}
 	}
 
-	layer = net.layers[0]
-	for i := 0; i < layer.errSig.row; i++ {
-		for j := 0; j < nodesPerLayer+1; j++ {
-
-			val := lerparam * layer.errSig.Get(i, 0) * net.input.Get(j, 0)
-			layer.weights.Set(i, j, val)
-		}
-	}
-
-	for k := 1; k < hiddenLayersPerNet+1; k++ {
-		layer := net.layers[k]
+	for _, layer := range net.layers {
 		for i := 0; i < layer.errSig.row; i++ {
-			for j := 0; j < nodesPerLayer+1; j++ {
-
-				val := lerparam * layer.errSig.Get(i, 0) * net.layers[k-1].output.Get(j, 0)
-				layer.weights.Set(i, j, val)
+			for j := 0; j < net.nodesPerLayer+1; j++ {
+				weigthDelta := net.lernparam * layer.errSig.Get(i, 0) * net.input.Get(j, 0)
+				weigth := layer.weights.Get(i, j) + weigthDelta
+				layer.weights.Set(i, j, weigth)
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type matrix struct {
 	row    int
 	collum int
@@ -32,25 +34,46 @@ func (m *matrix) Mul(m2 *matrix) (result *matrix) {
 		result = NewMatrix(m.row, m2.collum)
 		collum = m.collum
 
-	} else if m2.row == m.collum {
+		for i := 0; i < result.row; i++ {
+			for j := 0; j < result.collum; j++ {
+
+				var val float64
+				for k := 0; k < collum; k++ {
+					in1 := m.Get(i, k)
+					in2 := m2.Get(k, j)
+					val += in1 * in2
+				}
+				result.Set(i, j, val)
+			}
+		}
+	} else if m.row == m2.collum {
 		result = NewMatrix(m2.row, m.collum)
 		collum = m2.collum
-	}
 
-	for i := 0; i < result.row; i++ {
-		for j := 0; j < result.collum; j++ {
+		for i := 0; i < result.row; i++ {
+			for j := 0; j < result.collum; j++ {
 
-			var val float64
-			for k := 0; k < collum; k++ {
-				in1 := m.Get(i, k)
-				in2 := m2.Get(k, j)
-				val += in1 * in2
+				var val float64
+				for k := 0; k < collum; k++ {
+					in1 := m2.Get(i, k)
+					in2 := m.Get(k, j)
+					val += in1 * in2
+				}
+				result.Set(i, j, val)
 			}
-			result.Set(i, j, val)
 		}
 	}
 
 	return result
+}
+func (m *matrix) Print() {
+	for j := 0; j < m.row; j++ {
+		fmt.Print("|")
+		for k := 0; k < m.collum; k++ {
+			fmt.Printf("% 01.4f  | ", m.Get(j, k))
+		}
+		fmt.Print("\n")
+	}
 }
 
 /*
