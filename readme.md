@@ -33,4 +33,9 @@ Siehe [Doku.md](Doku.md).
 ## Die Sigmund Funktion
 
 ![img.png](readmeImages/img_1.png)
+
 Die Sigmund funktion ist ein Dämpfungsfunktion, die dafür sorgt, dass die Aktivirungslevel nie über 1 oder unter 0 fallen.
+
+## Anmerkungen
+
+Diese Arbeit wurde von Maarten Behn erstellt. Jedoch hat Moritz einen Beträchtlich teil bei dem verständnis und entwicklung des Codes beigetragen.
