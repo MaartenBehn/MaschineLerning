@@ -38,4 +38,4 @@ Die Sigmund funktion ist ein Dämpfungsfunktion, die dafür sorgt, dass die Akti
 
 ## Anmerkungen
 
-Diese Arbeit wurde von Maarten Behn erstellt. Jedoch hat Moritz einen Beträchtlich teil bei dem verständnis und entwicklung des Codes beigetragen.
+Diese Arbeit wurde von Maarten erstellt. Jedoch hat Moritz einen Beträchtlich teil bei dem verständnis und entwicklung des Codes beigetragen.
