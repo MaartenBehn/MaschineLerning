@@ -11,7 +11,7 @@ type matrix struct {
 ```
 
 `row` ist die Menge and Zeilen der Matrix.  
-`collum` ist die Menge and Zeilen der Matrix.  
+`collum` ist die Menge and Spalten der Matrix.  
 `data` ist der Inhalt der Matrix.  
 Oft werden im neuralen Netz Vektoren genutzt. Diese werden auch als Matrizen dargestellt. Bei diesen ist `collum = 1` 
 
@@ -59,7 +59,7 @@ type Layer struct {
 }
 ```
 
-Die Datenstruktur des neuralen Netzwerkes besteht aus einem Struct mit einem eingefassten Struct für die Layers.  
+Die Datenstruktur des neuralen Netzwerkes besteht aus einem Struct mit einem eingefassten Structs für die Layers.  
 `inputNodes` gibt die Menge an input nodes an. Also wie viele input Parameter man hat.  
 `hiddenLayersAmmount` gibt die Menge an hidden Layers an.
 Je mehr hidden Layers genutzt werden, umso komplexere Aufgaben kann das Netz loesen.  
@@ -73,7 +73,7 @@ In dem `Layer` Struct ist `nodesAmount` die Menge an Node von diesem Layer.
 `output` sind die errechneten Ergebnisse des Layers.
 `input` ist der gleiche Pointer wie `output` des vorigem Layers (index -1).  
 Im ersten Hiddenlayer ist `input` == `NeuralNet.input`.  
-`weights` repräsentiert die Verbindungen zum vorigem Layers.
+`weights` repräsentiert die Gewichtungen der Verbindungen zum vorigem Layers.
 `weights` hat die Groeße `nodesAmount` * `input.row`.  
 `netInput` und `errSig` sind zwischen Variablen, die für die backward Propergation benötigt werden.  
 `expected` wird nur im Outputlayer genutzt. Dort enthält es die Lösungswerte für den Datensatz.
