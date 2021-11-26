@@ -29,3 +29,8 @@ output Node werden, die für den Stern stehen.
 
 Man lernt ein neurales Netzwerk an in dem man es abwechselnd forward und backward paths mit verschiedenen daten sätzen rechnen lässt.
 Siehe [Doku.md](Doku.md).
+
+## Die Sigmund Funktion
+
+![img.png](readmeImages/img_1.png)
+Die Sigmund funktion ist ein Dämpfungsfunktion, die dafür sorgt, dass die Aktivirungslevel nie über 1 oder unter 0 fallen.
