@@ -11,7 +11,7 @@ Meine Arbeitsleistung besteht aus zwei Teilen:
    Jedoch mus ein gewisses Verständnis von dem Aufbau von Neuralen Netzwerken vorhanden sein, 
    damit man die Doku versteht.  
    Alle Datein, die aud `_test.go` enden sin Unit-Testes. 
-   Es gibt keine start Funktion in diesem Projekt, jedoch ist `TestLearnNet()` in [net_test.go](net_test.go) der Umfassendste test.
+   Es gibt keine start Funktion in diesem Projekt, jedoch ist `TestLearnNet()` in [learn_test.go](learn_test.go) der Umfassendste test.
    In ihm wird ein Neurales Netzwerk auf vier Daten sets trainiert.  
    Das Projekt hat 100 % Test Coverage und ich habe probiert den Code so verständlich und kurz wie nur Möglich zu schreiben.
    
